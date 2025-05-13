@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}Проекты{% endblock %}
+
+{% block content %}
+  <h1>Все проекты</h1>
+  {% if projects %}
+    <ul>
+      {% for project in projects %}
+        <li>
+          <strong>{{ project.title }}</strong><br>
+          {{ project.description }}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>Проекты не найдены.</p>
+  {% endif %}
+{% endblock %}

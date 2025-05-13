@@ -25,6 +25,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/telegram/', telegram_auth, name='telegram_auth'),
     path('', include('volunteers.urls')),
+    path('projects/', include('projects.urls')),
 ]
 
 if settings.DEBUG:

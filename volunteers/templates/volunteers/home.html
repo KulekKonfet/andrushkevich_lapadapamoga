@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Главная{% endblock %}
+
+{% block content %}
+    <h2>Добро пожаловать на ЛапаДапамога!</h2>
+    <p>Список проектов:</p>
+    {% for project in projects %}
+        <div>
+            <h3>{{ project.name }}</h3>
+            <p>{{ project.description }}</p>
+        </div>
+    {% empty %}
+        <p>Нет доступных проектов.</p>
+    {% endfor %}
+{% endblock %}

@@ -1,0 +1,9 @@
+{% load telegram_login %}
+
+{% if not user.is_authenticated %}
+    <h4>Войти через Telegram</h4>
+    {% telegram_login_button request domain="5802-89-187-171-227.ngrok-free.app" corner_radius=20 %}
+    <p>Или <a href="{% url 'login' %}">войдите стандартным способом</a></p>
+{% else %}
+    <p>Вы вошли как {{ user.username }}. <a href="{% url 'logout' %}">Выйти</a></p>
+{% endif %}

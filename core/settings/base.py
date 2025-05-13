@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_telegram_login',
     'volunteers',
+    'bot'
 ]
 
 MIDDLEWARE = [

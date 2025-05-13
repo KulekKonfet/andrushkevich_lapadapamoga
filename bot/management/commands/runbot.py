@@ -1,17 +1,12 @@
 import os
-import django
 import logging
-from telegram import Update
-from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
-from django.conf import settings
-from dotenv import load_dotenv
-load_dotenv()
 
-# Настройка Django
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings.dev')
-django.setup()
+from django.core.management.base import BaseCommand
+from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
+from telegram import Update
 
 from volunteers.models import VolunteerProject
+
 
 # Логирование
 logging.basicConfig(
@@ -19,11 +14,10 @@ logging.basicConfig(
     level=logging.INFO
 )
 
-# Команда /start
+# Команды бота
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Привет! Это бот платформы ЛапаДапамога 🐾")
 
-# Команда /projects
 async def projects(update: Update, context: ContextTypes.DEFAULT_TYPE):
     projects = VolunteerProject.objects.all()
     if projects:
@@ -32,10 +26,8 @@ async def projects(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
     else:
         message = "Нет доступных проектов 😢"
-
     await update.message.reply_text(message)
 
-# Команда /help
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "/start - приветствие\n"
@@ -43,20 +35,22 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "/help - помощь"
     )
 
-# Главная функция запуска
-def main():
-    token = os.getenv("TELEGRAM_BOT_TOKEN")
-    if not token:
-        raise ValueError("TELEGRAM_BOT_TOKEN не найден в переменных окружения.")
 
-    application = ApplicationBuilder().token(token).build()
+# Основная команда Django
+class Command(BaseCommand):
+    help = "Запускает Telegram-бота"
 
-    application.add_handler(CommandHandler("start", start))
-    application.add_handler(CommandHandler("projects", projects))
-    application.add_handler(CommandHandler("help", help_command))
+    def handle(self, *args, **kwargs):
+        token = os.getenv("TELEGRAM_BOT_TOKEN")
+        if not token:
+            self.stderr.write("❌ TELEGRAM_BOT_TOKEN не найден в переменных окружения.")
+            return
 
-    print("Бот запущен...")
-    application.run_polling()
+        application = ApplicationBuilder().token(token).build()
 
-if __name__ == "__main__":
-    main()
+        application.add_handler(CommandHandler("start", start))
+        application.add_handler(CommandHandler("projects", projects))
+        application.add_handler(CommandHandler("help", help_command))
+
+        self.stdout.write("✅ Бот запущен. Ожидаю команды в Telegram...")
+        application.run_polling()

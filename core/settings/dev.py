@@ -21,9 +21,10 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = [
-    '5802-89-187-171-227.ngrok-free.app',
+    '127.0.0.1',
     'localhost',
-]
+    '35a0-149-40-62-20.ngrok-free.app',
+    ]
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -46,5 +47,5 @@ DATABASES = {
 
 TELEGRAM_BOT_NAME = 'LapaDapamoga_bot'
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
-TELEGRAM_LOGIN_REDIRECT_URL = 'https://5802-89-187-171-227.ngrok-free.app/auth/telegram/callback/'
+TELEGRAM_LOGIN_REDIRECT_URL = 'https://35a0-149-40-62-20.ngrok-free.app'
 TELEGRAM_LOGIN_DIRECT_URL = False

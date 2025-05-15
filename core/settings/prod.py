@@ -16,7 +16,11 @@ import os
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = True
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '5802-89-187-171-227.ngrok-free.app']
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+    '35a0-149-40-62-20.ngrok-free.app',
+    ]
 
 DATABASES = {
     "default": {

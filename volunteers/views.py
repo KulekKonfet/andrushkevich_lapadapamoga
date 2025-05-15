@@ -1,13 +1,12 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, get_user_model
 from django.conf import settings
-from django.http import HttpResponseRedirect
 from django_telegram_login.authentication import verify_telegram_authentication
 from django_telegram_login.errors import NotTelegramDataError, TelegramDataIsOutdatedError
-
 from volunteers.models import VolunteerProject
 from volunteers.forms import VolunteerProjectForm
+from django.contrib.auth.forms import UserCreationForm
 
 
 def home(request):
@@ -31,7 +30,7 @@ def create_project(request):
 
 @login_required
 def join_project(request, project_id):
-    project = VolunteerProject.objects.get(id=project_id)
+    project = get_object_or_404(VolunteerProject, id=project_id)
     project.participants.add(request.user)
     return redirect('home')
 
@@ -63,3 +62,30 @@ def telegram_auth(request):
 
     except (NotTelegramDataError, TelegramDataIsOutdatedError):
         return redirect('login')
+    
+
+def signup(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('project_list')
+    else:
+        form = UserCreationForm()
+    return render(request, 'registration/signup.html', {'form': form})
+
+
+def telegram_login(request):
+    try:
+        if request.GET:
+            bot_token = settings.TELEGRAM_BOT_TOKEN
+            user_data = verify_telegram_authentication(bot_token=bot_token, request_data=request.GET.dict())
+            if user_data:
+                User = get_user_model()
+                username = user_data.get("username") or f"tg_{user_data['id']}"
+                user, created = User.objects.get_or_create(username=username)
+                login(request, user)
+    except (NotTelegramDataError, TelegramDataIsOutdatedError):
+        pass
+    return redirect('project_list')

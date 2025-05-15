@@ -1,31 +1,25 @@
-"""
-URL configuration for core project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
-
 from django.contrib import admin
 from django.urls import path, include
 from volunteers.views import telegram_auth
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth import views as auth_views
+from volunteers import views as volunteer_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('auth/telegram/', telegram_auth, name='telegram_auth'),
+
+    # Если нужен только один из двух:
+    # path('auth/telegram/', telegram_auth, name='telegram_auth'),
+    path('telegram-login/', volunteer_views.telegram_login, name='telegram_login'),
+
     path('', include('volunteers.urls')),
-    path('projects/', include('projects.urls')),
+    path('projects/', include(('projects.urls', 'projects'), namespace='projects')),
+
+    # Авторизация / Регистрация
+    path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(next_page='/'), name='logout'),
+    path('signup/', volunteer_views.signup, name='signup'),
 ]
 
 if settings.DEBUG:

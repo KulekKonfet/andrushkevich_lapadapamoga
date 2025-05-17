@@ -19,7 +19,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
-    '35a0-149-40-62-20.ngrok-free.app',
+    '30db-138-199-50-134.ngrok-free.app',
     ]
 
 DATABASES = {

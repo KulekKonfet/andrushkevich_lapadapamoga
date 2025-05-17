@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}Страница не найдена - ЛапаДапамога{% endblock %}
+
+{% block content %}
+<div class="container d-flex flex-column align-items-center justify-content-center text-center" style="min-height: 70vh;">
+    <div class="p-5 rounded shadow-sm" style="background-color: #fff0f5; max-width: 600px;">
+        <h1 class="display-4" style="color: #6a5acd;">404 🐾</h1>
+        <p class="lead" style="color: #4b0082;">Упс! Такой страницы не существует.</p>
+        <p class="mb-4">Возможно, вы ошиблись в адресе или перешли по устаревшей ссылке.</p>
+        <a href="{% url 'home' %}" class="btn" style="background-color: #e6e6fa; color: #4b0082;">Вернуться на главную</a>
+    </div>
+</div>
+{% endblock %}

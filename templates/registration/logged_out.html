@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}Выход - ЛапаДапамога{% endblock %}
+
+{% block content %}
+<div class="container p-4 mt-5 rounded shadow-sm text-center" style="background-color: #fff0f5; max-width: 500px;">
+    <h2 class="mb-3" style="color: #6a5acd;">Вы вышли из аккаунта</h2>
+    <p class="mb-4">Спасибо, что были с нами 💜</p>
+    <a href="{% url 'login' %}" class="btn" style="background-color: #e6e6fa; color: #4b0082;">Войти снова</a>
+</div>
+{% endblock %}

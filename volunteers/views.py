@@ -89,3 +89,7 @@ def telegram_login(request):
     except (NotTelegramDataError, TelegramDataIsOutdatedError):
         pass
     return redirect('project_list')
+
+@login_required
+def profile(request):
+    return render(request, 'volunteers/profile.html')

@@ -8,10 +8,10 @@
     
     <style>
         :root {
-            --color-pink-light: #fff0f5;  /* очень светлый нежно-розовый фон */
-            --color-pink-dark: #c47ba0;   /* фиолетово-розовый для кнопок */
-            --color-purple-light: #d6c6f4; /* пастельный фиолетовый фон */
-            --color-purple-dark: #7b5dc7;  /* тёмный фиолетовый */
+            --color-pink-light: #fff0f5;     /* очень светлый нежно-розовый фон */
+            --color-pink-dark: #c47ba0;      /* фиолетово-розовый для кнопок */
+            --color-purple-light: #d6c6f4;   /* пастельный фиолетовый фон */
+            --color-purple-dark: #7b5dc7;    /* тёмный фиолетовый */
         }
         body {
             background-color: var(--color-pink-light);
@@ -52,6 +52,22 @@
             background-color: var(--color-pink-dark);
             color: white;
         }
+        .btn-outline-info {
+            color: var(--color-purple-dark);
+            border-color: var(--color-purple-dark);
+        }
+        .btn-outline-info:hover {
+            background-color: var(--color-purple-dark);
+            color: white;
+        }
+        .btn-outline-danger {
+            color: var(--color-pink-dark);
+            border-color: var(--color-pink-dark);
+        }
+        .btn-outline-danger:hover {
+            background-color: var(--color-pink-dark);
+            color: white;
+        }
     </style>
 
     {% block extra_head %}{% endblock %}
@@ -73,16 +89,21 @@
                     <li class="nav-item">
                         <a class="nav-link {% if '/projects' in request.path %}active{% endif %}" href="/projects/">Проекты</a>
                     </li>
-                    {% if request.user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link {% if '/profile' in request.path %}active{% endif %}" href="/profile/">Профиль</a>
-                    </li>
-                    {% endif %}
                 </ul>                
 
                 {% if request.user.is_authenticated %}
                     <span class="navbar-text me-3">Привет, {{ request.user.username }}!</span>
-                    <a href="{% url 'logout' %}" class="btn btn-outline-danger">Выйти</a>
+
+                    <a href="{% url 'volunteers:profile' %}" class="btn btn-outline-info me-2">Мой профиль</a>
+                    
+                    {% if request.user.volunteerprofile.role == 'organizer' %}
+                        <a href="{% url 'volunteers:profile' %}#projects" class="btn btn-outline-primary me-2">Мои проекты</a>
+                    {% endif %}
+
+                    <form method="post" action="{% url 'logout' %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-danger">Выйти</button>
+                    </form>
                 {% else %}
                     <a href="{% url 'login' %}" class="btn btn-outline-success me-2">Войти</a>
                     <a href="{% url 'signup' %}" class="btn btn-outline-secondary me-2">Регистрация</a>

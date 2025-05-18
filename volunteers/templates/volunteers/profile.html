@@ -1,18 +1,58 @@
 {% extends 'base.html' %}
+{% load form_filters %}
 
-{% block title %}Профиль - ЛапаДапамога{% endblock %}
+{% block title %}Мой профиль - ЛапаДапамога{% endblock %}
 
 {% block content %}
-<div class="container p-4 rounded" style="background-color: #fff0f5; max-width: 600px;">
-    <h2 class="text-center mb-4" style="color: #6a5acd;">Профиль пользователя</h2>
-    <ul class="list-group">
-        <li class="list-group-item"><strong>Имя пользователя:</strong> {{ user.username }}</li>
-        <li class="list-group-item"><strong>Имя:</strong> {{ user.first_name }}</li>
-        <li class="list-group-item"><strong>Фамилия:</strong> {{ user.last_name }}</li>
-        <li class="list-group-item"><strong>Email:</strong> {{ user.email }}</li>
-    </ul>
-    <div class="text-center mt-4">
-        <a href="{% url 'logout' %}" class="btn btn-outline-danger">Выйти</a>
+<div class="container py-4 px-3 rounded" style="background-color: #fff0f5;">
+    <h2 class="text-center mb-4" style="color: #6a5acd;">Мой профиль</h2>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <form method="post" class="shadow-sm p-4 rounded" style="background-color: #ffffff;">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                {% for field in form %}
+                    <div class="mb-3">
+                        <label for="{{ field.id_for_label }}" class="form-label" style="color: #6a5acd;">{{ field.label }}</label>
+                        {{ field|add_class:"form-control" }}
+                        {% if field.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ field.errors|striptags }}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                {% if request.user.volunteerprofile %}
+                    <div class="mb-3">
+                        <label class="form-label" style="color: #6a5acd;">Роль</label>
+                        <input type="text" readonly class="form-control-plaintext" value="{{ request.user.volunteerprofile.get_role_display }}">
+                    </div>
+                {% endif %}
+
+                <div class="text-end">
+                    <button type="submit" class="btn" style="background-color: #e6e6fa; color: #4b0082;">Сохранить</button>
+                </div>
+            </form>
+        </div>
     </div>
+
+    {% if is_organizer %}
+        <hr class="my-4">
+        <h4 id="projects" class="text-center mb-3" style="color: #6a5acd;">Мои проекты</h4>
+        {% if projects %}
+            <ul class="list-group shadow-sm">
+                {% for project in projects %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <strong>{{ project.title }}</strong>
+                        <span class="text-muted">{{ project.description|truncatechars:80 }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-muted text-center">У вас пока нет проектов.</p>
+        {% endif %}
+    {% endif %}
 </div>
 {% endblock %}

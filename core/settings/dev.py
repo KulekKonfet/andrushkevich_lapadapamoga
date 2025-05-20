@@ -23,7 +23,7 @@ DEBUG = os.getenv("DEBUG", "False") == "True"
 ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
-    'feb5-149-40-62-19.ngrok-free.app',
+    '5424-138-199-50-134.ngrok-free.app',
     ]
 
 AUTHENTICATION_BACKENDS = [
@@ -48,5 +48,5 @@ LOGOUT_REDIRECT_URL = None
 
 TELEGRAM_BOT_NAME = 'LapaDapamoga_bot'
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
-TELEGRAM_LOGIN_REDIRECT_URL = 'https://feb5-149-40-62-19.ngrok-free.app'
+TELEGRAM_LOGIN_REDIRECT_URL = 'https://5424-138-199-50-134.ngrok-free.app'
 TELEGRAM_LOGIN_DIRECT_URL = False

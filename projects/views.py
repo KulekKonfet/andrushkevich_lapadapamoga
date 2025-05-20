@@ -37,3 +37,13 @@ def edit_project(request, project_id):
         form = VolunteerProjectForm(instance=project)
 
     return render(request, 'projects/edit_project.html', {'form': form})
+
+@login_required
+def join_project(request, project_id):
+    project = get_object_or_404(VolunteerProject, id=project_id)
+
+    if request.method == 'POST':
+        project.participants.add(request.user)
+        return redirect('projects:project_list')
+
+    return render(request, 'projects/join_project.html', {'project': project})

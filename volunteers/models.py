@@ -19,9 +19,21 @@ class VolunteerProject(models.Model):
         return self.title
 
 class VolunteerProfile(models.Model):
+    ROLE_CHOICES = [
+    ('organizer', 'Организатор'),
+    ('volunteer', 'Волонтёр'),
+]
+
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     telegram_id = models.CharField(max_length=100, blank=True, null=True)
     bio = models.TextField(blank=True, null=True)
+    role = models.CharField(
+        max_length=20,
+        choices=ROLE_CHOICES,
+        default='volunteer',
+        verbose_name="Роль"
+    )
+
 
     def __str__(self):
         return self.user.username

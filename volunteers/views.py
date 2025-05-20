@@ -6,7 +6,9 @@ from django_telegram_login.authentication import verify_telegram_authentication
 from django_telegram_login.errors import NotTelegramDataError, TelegramDataIsOutdatedError
 from volunteers.models import VolunteerProject
 from volunteers.forms import VolunteerProjectForm
-from django.contrib.auth.forms import UserCreationForm
+from volunteers.forms import CustomUserCreationForm
+from volunteers.forms import ProfileForm
+from projects.models import VolunteerProject
 
 
 def home(request):
@@ -66,13 +68,13 @@ def telegram_auth(request):
 
 def signup(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)
             return redirect('project_list')
     else:
-        form = UserCreationForm()
+        form = CustomUserCreationForm()
     return render(request, 'registration/signup.html', {'form': form})
 
 
@@ -89,3 +91,26 @@ def telegram_login(request):
     except (NotTelegramDataError, TelegramDataIsOutdatedError):
         pass
     return redirect('project_list')
+
+@login_required
+def profile(request):
+    return render(request, 'volunteers/profile.html')
+
+@login_required
+def profile_view(request):
+    user = request.user
+    projects = user.volunteerproject_set.all() if hasattr(user, 'volunteerproject_set') else []
+
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('volunteers:profile')
+    else:
+        form = ProfileForm(instance=user)
+
+    return render(request, 'volunteers/profile.html', {
+        'form': form,
+        'projects': projects,
+        'is_organizer': hasattr(user, 'volunteerprofile') and user.volunteerprofile.role == 'organizer',
+    })

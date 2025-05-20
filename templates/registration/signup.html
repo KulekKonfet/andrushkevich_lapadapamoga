@@ -1,12 +1,33 @@
 {% extends 'base.html' %}
-{% block title %}Регистрация{% endblock %}
+{% load form_filters %}
+
+{% block title %}Регистрация - ЛапаДапамога{% endblock %}
+
 {% block content %}
-<div class="container mt-5">
-    <h2>Регистрация</h2>
-    <form method="post">
+<div class="container p-4 mt-5 rounded shadow-sm" style="background-color: #fff0f5; max-width: 500px;">
+    <h2 class="text-center mb-4" style="color: #6a5acd;">Регистрация</h2>
+
+    <form method="post" novalidate>
         {% csrf_token %}
-        {{ form.as_p }}
-        <button class="btn btn-success" type="submit">Зарегистрироваться</button>
+        {% for field in form %}
+            <div class="mb-3">
+                <label for="{{ field.id_for_label }}" class="form-label" style="color: #6a5acd;">
+                    {{ field.label }}
+                </label>
+                {{ field|add_class:"form-control" }}
+                {% if field.errors %}
+                    <div class="text-danger small mt-1">
+                        {{ field.errors|striptags }}
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <div class="d-grid">
+            <button type="submit" class="btn" style="background-color: #ffc0cb; color: #800080;">
+                Зарегистрироваться
+            </button>
+        </div>
     </form>
 </div>
 {% endblock %}

@@ -1,12 +1,29 @@
 {% extends 'base.html' %}
 
-{% block title %}Создать проект{% endblock %}
+{% block title %}Создание проекта - ЛапаДапамога{% endblock %}
 
 {% block content %}
-    <h2>Создать волонтёрский проект</h2>
-    <form method="post">
+<div class="container p-4 rounded" style="background-color: #fff0f5; max-width: 800px;">
+    <h2 class="mb-4 text-center" style="color: #6a5acd;">Создать новый проект</h2>
+
+    <form method="post" class="needs-validation" novalidate>
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Создать</button>
+        {% for field in form %}
+            <div class="mb-3">
+                <label for="{{ field.id_for_label }}" class="form-label" style="color: #6a5acd;">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    <div class="text-danger small mt-1">
+                        {{ field.errors|striptags }}
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <div class="d-flex justify-content-between mt-4">
+            <a href="{% url 'projects:project_list' %}" class="btn btn-outline-secondary">← Назад к списку</a>
+            <button type="submit" class="btn" style="background-color: #e6e6fa; color: #4b0082;">Создать проект</button>
+        </div>
     </form>
+</div>
 {% endblock %}

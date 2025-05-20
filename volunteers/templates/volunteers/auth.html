@@ -1,9 +1,22 @@
 {% load telegram_login %}
 
-{% if not user.is_authenticated %}
-    <h4>Войти через Telegram</h4>
-    {% telegram_login_button request domain="30db-138-199-50-134.ngrok-free.app" corner_radius=20 %}
-    <p>Или <a href="{% url 'login' %}">войдите стандартным способом</a></p>
-{% else %}
-    <p>Вы вошли как {{ user.username }}. <a href="{% url 'logout' %}">Выйти</a></p>
-{% endif %}
+<div class="container p-4 mt-5 rounded shadow-sm" style="background-color: #fff0f5; max-width: 500px;">
+    {% if not user.is_authenticated %}
+        <h4 class="mb-4 text-center" style="color: #6a5acd;">Вход в ЛапаДапамога</h4>
+
+        <div class="d-flex justify-content-center mb-3">
+            {% telegram_login_button request domain="5424-138-199-50-134.ngrok-free.app" corner_radius=20 %}
+        </div>
+
+        <p class="text-center">
+            или <a href="{% url 'login' %}" class="text-decoration-none" style="color: #4b0082;">войдите стандартным способом</a>
+        </p>
+    {% else %}
+        <div class="alert alert-success text-center" role="alert">
+            Вы вошли как <strong>{{ user.username }}</strong>.
+        </div>
+        <div class="text-center">
+            <a href="{% url 'logout' %}" class="btn btn-outline-danger">Выйти</a>
+        </div>
+    {% endif %}
+</div>
